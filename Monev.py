@@ -17,7 +17,24 @@ def load_data(url):
 
 df = load_data(SHEET_URL)
 
-df = df.rename(columns={'Dengan ini saya menyatakan bahwa data yang diberikan sesuai dengan kondisi yang sebenarnya, diisi tanpa paksaan dan dengan penuh kesadaran, serta dapat digunakan untuk tujuan penelitian.': 'Responden', 'Nama Lengkap Agen Pojok Statistik': 'Agen', 'Tempat Tinggal saat ini': 'Domisili', 'Besaran Uang Kuliah Tunggal (UKT) (Ribu Rupiah)': 'UKT', 'Rata-rata pengeluaran transportasi per hari (Rp)': 'Transport', 'Rata-rata pengeluaran makan/ jajan per hari (Rp)': 'Jajan', 'Rata-rata pengeluaran internet per bulan (Rp)': 'Internet', 'Apakah melakukan usaha/ bisnis untuk memperoleh penghasilan?': 'Bisnis', 'Platform online yang paling sering diakses dalam seminggu terakhir': 'Platform', 'Operator seluler yang digunakan': 'Operator', 'Rencana setelah lulus kuliah': 'Rencana', 'Alamat website BPS': 'Website BPS', 'Alamat website BPS Provinsi Jawa Barat': 'Website BPS Jabar', 'Menu yang paling sering diakses di website BPS': 'Menu Web', 'Subjek yang paling sering diakses di website BPS': 'Subjek Web', 'Menyaksikan Rilis Berita Resmi Statistik BPS Provinsi Jawa Barat': 'Rilis BRS', 'Indikator statistik yang rutin dirilis oleh BPS Provinsi Jawa Barat': 'Indikator BPS', 'Apakah di kampus Anda sudah tersedia Ruang Pojok Statistik': 'Ruang Postat', 'Alamat Pojok Statistik Virtual': 'PSV', 'Menu yang paling disukai dari Pojok Statistik Virtual': 'Menu PSV', 'Data yang diperlukan untuk tugas/ penelitian/ skripsi/ tesis/ disertasi': 'Kebutuhan Data', 'Jenis Kelamin': 'Gender'})
+df = df.rename(columns={'Dengan ini saya menyatakan bahwa data yang diberikan sesuai dengan kondisi yang sebenarnya, diisi tanpa paksaan dan dengan penuh kesadaran, serta dapat digunakan untuk tujuan penelitian.': 'Responden', 
+                        'Nama Lengkap Agen Pojok Statistik': 'Agen', 
+                        'Tempat Tinggal saat ini': 'Domisili', 
+                        'Besaran Uang Kuliah Tunggal (UKT) (Ribu Rupiah)': 'UKT', 
+                        'Rata-rata pengeluaran transportasi per hari (Rp)': 'Transport', 'Rata-rata pengeluaran makan/ jajan per hari (Rp)': 'Jajan', 'Rata-rata pengeluaran internet per bulan (Rp)': 'Internet', 
+                        'Apakah melakukan usaha/ bisnis untuk memperoleh penghasilan?': 'Bisnis', 
+                        'Platform online yang paling sering diakses dalam seminggu terakhir': 'Platform', 
+                        'Operator seluler yang digunakan': 'Operator', 
+                        'Rencana setelah lulus kuliah': 'Rencana', 
+                        'Alamat website BPS': 'Website BPS', 
+                        'Alamat website BPS Provinsi Jawa Barat': 'Website BPS Jabar', 
+                        'Menu yang paling sering diakses di website BPS': 'Menu Web', 
+                        'Subjek yang paling sering diakses di website BPS': 'Subjek Web', 'Menyaksikan Rilis Berita Resmi Statistik BPS Provinsi Jawa Barat': 'Rilis BRS', 
+                        'Indikator statistik yang rutin dirilis oleh BPS Provinsi Jawa Barat': 'Indikator BPS', 
+                        'Apakah di kampus Anda sudah tersedia Ruang Pojok Statistik': 'Ruang Postat', 
+                        'Alamat Pojok Statistik Virtual': 'PSV', 
+                        'Menu yang paling disukai dari Pojok Statistik Virtual': 'Menu PSV', 'Data yang diperlukan untuk tugas/ penelitian/ skripsi/ tesis/ disertasi': 'Kebutuhan Data', 
+                        'Jenis Kelamin': 'Gender'})
 
 df['Responden'] = df['Responden'].replace('Setuju',1)
 # Konversi kolom 'TimeStamp' ke tipe datetime
@@ -25,11 +42,6 @@ df['Timestamp'] = pd.to_datetime(df['Timestamp'])
 
 # Ekstrak tanggal (sebagai tipe datetime.date)
 df['Tanggal'] = df['Timestamp'].dt.date
-
-with st.container(border=True):
-    st.header("Monitoring Survei Mahasiswa Pojok Statistik")
-    st.subheader("Provinsi Jawa Barat")
-    st.success('Tanggal 23 - 26 April 2025')
 
 total_respon = df['Responden'].count()
 
@@ -54,37 +66,65 @@ df['Tanggal Lahir'] = pd.to_datetime(df['Tanggal Lahir'], format='%m/%d/%Y')
 # Hitung umur
 df['Umur'] = df['Tanggal Lahir'].apply(hitung_umur)
 
-#st.dataframe(df)
+###########################################################################################
+# HEADER
+with st.container(border=True):
+    st.header("Monitoring Survei Mahasiswa Pojok Statistik")
+    st.subheader("Provinsi Jawa Barat")
+    st.success('Tanggal 23 - 26 April 2025')
 
 # METRIK
-kol1, kol2, kol3 = st.columns(3)
-with kol1:
+kol1a, kol1b, kol1c = st.columns(3)
+with kol1a:
     with st.container(border=True):
         with st.success(""):
             with st.container(border=True):
                 st.write(':green[Jumlah Responden]')
                 st.title(f':green[{total_respon}]')
 
-with kol2:
+with kol1b:
     with st.container(border=True):
         with st.container(border=True):
             st.write(':blue[Laki-laki]')
             st.title(f':blue[{total_laki}]')
 
-with kol3:
+with kol1c:
     with st.container(border=True):
         with st.container(border=True):
             st.write(':orange[Perempuan]')
             st.title(f':orange[{total_perempuan}]')
 
+#######################################################################################
+
 # Progres Harian
-progres = px.line(harian, x='Tanggal', y='Responden', markers=True)
+progres = px.bar(harian, x='Tanggal', y='Responden')
 progres.update_layout(
     xaxis_tickformat="%d %b %Y"  # Format tanggal: Hari Bulan Tahun (e.g., 22 Apr 2025)
 )
-with st.container(border=True):
-    st.plotly_chart(progres, use_container_width=True)
 
+perpostat = px.pie(df, values='Responden', names='Asal Kampus')
+perpostat.update_layout(legend=dict(
+    orientation="h",
+    yanchor="bottom",
+    y=-0.2,
+    xanchor="center",
+    x=0.5
+))
+
+# Progres per Postat
+kol2a, kol2b = st.columns(2)
+
+with kol2a:
+    with st.container(border=True):
+        st.success('Capaian Responden per Hari')
+        st.plotly_chart(progres, use_container_width=True)
+
+with kol2b:
+    with st.container(border=True):
+        st.warning('Capaian Responden per Pojok Statistik')
+        st.plotly_chart(perpostat, use_container_width=True)
+
+#######################################################################################
 with st.expander('Progres Berdasarkan Postat'):
     kol1a, kol1b, kol1c = st.columns(3)
 
@@ -106,10 +146,10 @@ with st.expander('Progres Berdasarkan Postat'):
     tampilkan_data_kampus('Universitas Siliwangi', kol2c)
     tampilkan_data_kampus('Universitas Pelita Bangsa', kol2d)
         
-
+########################################################################################
 rekap_agen = df.groupby(['Asal Kampus', 'Agen'])['Responden'].count().reset_index()
 
-monev_batang = px.bar(rekap_agen, x='Agen', y='Responden')
+monev_batang = px.bar(rekap_agen, y='Agen', x='Responden', orientation='h')
 
 monev_trimep = px.treemap(rekap_agen, path=['Asal Kampus', 'Agen'], values='Responden')
 
@@ -117,8 +157,13 @@ kola, kolb = st.columns(2)
 
 with kola:
     with st.container(border=True):
+        st.success('Capaian per Agen')
         st.plotly_chart(monev_batang, use_container_width=True)
 
 with kolb:
     with st.container(border=True):
+        st.warning('Capaian per Pojok Statistik')
         st.plotly_chart(monev_trimep, use_container_width=True)
+
+st.subheader('', divider='rainbow')        
+st.info('Tim Pembina Pojok Statistik @ BPS Provinsi Jawa Barat')

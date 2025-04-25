@@ -4,475 +4,100 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monitoring Survei Mahasiswa Pojok Statistik</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-    <style>
-        body {
-            font-family: sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f2f6; /* Light gray background */
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 20px;
-            background-color: white; /* Ensure background color for visibility */
-            padding: 10px 0;
-            position: sticky;
-            top: 0;
-            z-index: 100; /* Ensure it's above other content */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for better visibility */
-        }
-
-        header h1 {
-            color: #333;
-        }
-
-        header h2 {
-            color: #666;
-        }
-
-        .success-box, .info-box {
-            padding: 10px;
-            border-radius: 5px;
-            margin-top: 10px;
-            text-align: center;
-        }
-
-        .success-box {
-            background-color: #d4edda;
-            color: #155724;
-        }
-
-        .info-box {
-            background-color: #cce5ff;
-            color: #004085;
-        }
-
-        .metrics {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 20px;
-        }
-
-        .metric-box {
-            width: 30%;
-            padding: 10px;
-            text-align: center;
-        }
-
-        .inner-border {
-            border: 1px solid; /* Add a border */
-            padding: 10px; /* Add some padding inside the box */
-            border-radius: 5px; /* Round the corners */
-        }
-
-        .green-border {
-            border-color: #28a745; /* Green border */
-        }
-
-        .blue-border {
-            border-color: #007bff; /* Blue border */
-        }
-
-        .orange-border {
-            border-color: #fd7e14; /* Orange border */
-        }
-
-        .metric-label {
-            font-size: 1.1em;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .metric-value {
-            font-size: 2em;
-        }
-
-        .green-text {
-            color: #28a745;
-        }
-
-        .blue-text {
-            color: #007bff;
-        }
-
-        .orange-text {
-            color: #fd7e14;
-        }
-
-        .charts {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .chart-container {
-            width: 48%;
-            padding: 10px;
-        }
-
-        .border {
-            border: 1px solid #ccc;
-            padding: 10px;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-        }
-
-        .rekap-kampus {
-            margin-bottom: 20px;
-        }
-
-        .kampus-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 10px;
-        }
-
-        .kampus-box {
-            padding: 10px;
-            text-align: center;
-        }
-
-        .kampus-name {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .monev-charts {
-            display: flex;
-            justify-content: space-between;
-        }
-    </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Monitoring Survei Mahasiswa Pojok Statistik</h1>
-            <h2>Provinsi Jawa Barat</h2>
-            <div class="success-box">Tanggal 23 - 26 April 2025</div>
-        </header>
 
-        <section class="metrics">
-            <div class="metric-box green-border">
-                <div class="inner-border">
-                    <div class="metric-label green-text">Jumlah Responden</div>
-                    <div class="metric-value green-text" id="total-responden"></div>
-                </div>
+    <header>
+        <h1>Monitoring Survei Mahasiswa Pojok Statistik</h1>
+        <p>Provinsi Jawa Barat</p>
+        <div class="success-message">Tanggal 23 - 26 April 2025</div>
+    </header>
+
+    <section class="metrics">
+        <div class="metric-box">
+            <div class="metric-inner">
+                <div class="metric-label green">Jumlah Responden</div>
+                <div class="metric-value green" id="total-responden"></div>
             </div>
-
-            <div class="metric-box blue-border">
-                <div class="inner-border">
-                    <div class="metric-label blue-text">Laki-laki</div>
-                    <div class="metric-value blue-text" id="total-laki"></div>
-                </div>
+        </div>
+        <div class="metric-box">
+            <div class="metric-inner">
+                <div class="metric-label blue">Laki-laki</div>
+                <div class="metric-value blue" id="total-laki"></div>
             </div>
-
-            <div class="metric-box orange-border">
-                <div class="inner-border">
-                    <div class="metric-label orange-text">Perempuan</div>
-                    <div class="metric-value orange-text" id="total-perempuan"></div>
-                </div>
+        </div>
+        <div class="metric-box">
+            <div class="metric-inner">
+                <div class="metric-label orange">Perempuan</div>
+                <div class="metric-value orange" id="total-perempuan"></div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="charts">
-            <div class="chart-container border">
-                <h3>Progres Harian</h3>
-                <canvas id="progres-harian-chart"></canvas>
+    <section class="charts">
+        <div class="chart-container">
+            <h3>Capaian Responden per Hari</h3>
+            <div id="progres-harian"></div>
+        </div>
+        <div class="chart-container">
+            <h3>Capaian Responden per Pojok Statistik</h3>
+            <div id="per-postat"></div>
+        </div>
+    </section>
+
+    <section class="kampus-data">
+        <h2>Progres Berdasarkan Postat</h2>
+        <div class="kampus-grid">
+            <div class="kampus-box">
+                <h4>Universitas Padjadjaran</h4>
+                <div id="unpad-count"></div>
             </div>
-
-            <div class="chart-container border">
-                <h3>Asal Kampus</h3>
-                <canvas id="pie-kampus-chart"></canvas>
+            <div class="kampus-box">
+                <h4>Universitas Katolik Parahyangan</h4>
+                <div id="unpar-count"></div>
             </div>
-        </section>
-
-        <section class="rekap-kampus">
-            <h3>Rekap Berdasarkan Pojok Statistik</h3>
-            <div class="kampus-grid">
-                <div class="kampus-box border">
-                    <div class="kampus-name">Universitas Padjadjaran</div>
-                    <div class="kampus-responden" id="unpad-responden"></div>
-                </div>
-                <div class="kampus-box border">
-                    <div class="kampus-name">Universitas Katolik Parahyangan</div>
-                    <div class="kampus-responden" id="unpar-responden"></div>
-                </div>
-                <div class="kampus-box border">
-                    <div class="kampus-name">Institut Pertanian Bogor</div>
-                    <div class="kampus-responden" id="ipb-responden"></div>
-                </div>
-                <div class="kampus-box border">
-                    <div class="kampus-name">Universitas Indonesia</div>
-                    <div class="kampus-responden" id="ui-responden"></div>
-                </div>
-                <div class="kampus-box border">
-                    <div class="kampus-name">Universitas Islam Bandung</div>
-                    <div class="kampus-responden" id="unisba-responden"></div>
-                </div>
-                <div class="kampus-box border">
-                    <div class="kampus-name">Universitas Siliwangi</div>
-                    <div class="kampus-responden" id="unsil-responden"></div>
-                </div>
-                <div class="kampus-box border">
-                    <div class="kampus-name">Universitas Pelita Bangsa</div>
-                    <div class="kampus-responden" id="upb-responden"></div>
-                </div>
+            <div class="kampus-box">
+                <h4>Institut Pertanian Bogor</h4>
+                <div id="ipb-count"></div>
             </div>
-        </section>
-
-        <section class="monev-charts">
-            <div class="chart-container border">
-                <div class="success-box">Berdasarkan Agen Pojok Statistik</div>
-                <canvas id="monev-batang-chart"></canvas>
+            <div class="kampus-box">
+                <h4>Universitas Indonesia</h4>
+                <div id="ui-count"></div>
             </div>
-
-            <div class="chart-container border">
-                <div class="info-box">Berdasarkan Pojok Statistik</div>
-                <canvas id="monev-trimep-chart"></canvas>
+            <div class="kampus-box">
+                <h4>Universitas Islam Bandung</h4>
+                <div id="unisba-count"></div>
             </div>
-        </section>
-    </div>
+            <div class="kampus-box">
+                <h4>Universitas Siliwangi</h4>
+                <div id="unsil-count"></div>
+            </div>
+            <div class="kampus-box">
+                <h4>Universitas Pelita Bangsa</h4>
+                <div id="upb-count"></div>
+            </div>
+        </div>
+    </section>
 
-    <script>
-        // Muat data dari Google Sheets menggunakan Papa Parse
-        async function loadData() {
-            const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQqnVCJkYL6-nHK4Bt6JMDLAGHygCbpRb3vOmuXLOpO5D7qGFiR84InumQY8HjEjVTDbKfcsxIx2a9k/pub?gid=152263470&single=true&output=csv';
-            return new Promise((resolve, reject) => {
-                Papa.parse(SHEET_URL, {
-                    download: true,
-                    header: true,  // Menggunakan baris pertama sebagai header
-                    dynamicTyping: true, // Secara otomatis mendeteksi tipe data
-                    complete: function(results) {
-                        if (results.errors.length > 0) {
-                            reject(results.errors);
-                        } else {
-                            resolve(results.data);
-                        }
-                    },
-                    error: function(error) {
-                        reject(error);
-                    }
-                });
-            });
-        }
+    <section class="agent-charts">
+        <div class="chart-container">
+            <h3>Capaian per Agen</h3>
+            <div id="monev-batang"></div>
+        </div>
+        <div class="chart-container">
+            <h3>Capaian per Pojok Statistik (Treemap)</h3>
+            <div id="monev-trimep"></div>
+        </div>
+    </section>
 
-        // Fungsi untuk membuat Chart.js
-        function createChart(canvasId, type, data, options) {
-            const ctx = document.getElementById(canvasId).getContext('2d');
-            return new Chart(ctx, {
-                type: type,
-                data: data,
-                options: options
-            });
-        }
+    <footer>
+        <hr style="border-top: 3px dashed #8c8b8b">
+        <p class="info-footer">Tim Pembina Pojok Statistik @ BPS Provinsi Jawa Barat</p>
+    </footer>
 
-        // Fungsi Utama
-        async function main() {
-            try {
-                const df = await loadData();
-
-                //Rename Kolom
-                const renamed_df = df.map(row => ({
-                  'Responden': row['Dengan ini saya menyatakan bahwa data yang diberikan sesuai dengan kondisi yang sebenarnya, diisi tanpa paksaan dan dengan penuh kesadaran, serta dapat digunakan untuk tujuan penelitian.'],
-                  'Agen': row['Nama Lengkap Agen Pojok Statistik'],
-                  'Domisili': row['Tempat Tinggal saat ini'],
-                  'UKT': row['Besaran Uang Kuliah Tunggal (UKT) (Ribu Rupiah)'],
-                  'Transport': row['Rata-rata pengeluaran transportasi per hari (Rp)'],
-                  'Jajan': row['Rata-rata pengeluaran makan/ jajan per hari (Rp)'],
-                  'Internet': row['Rata-rata pengeluaran internet per bulan (Rp)'],
-                  'Bisnis': row['Apakah melakukan usaha/ bisnis untuk memperoleh penghasilan?'],
-                  'Platform': row['Platform online yang paling sering diakses dalam seminggu terakhir'],
-                  'Operator': row['Operator seluler yang digunakan'],
-                  'Rencana': row['Rencana setelah lulus kuliah'],
-                  'Website BPS': row['Alamat website BPS'],
-                  'Website BPS Jabar': row['Alamat website BPS Provinsi Jawa Barat'],
-                  'Menu Web': row['Menu yang paling sering diakses di website BPS'],
-                  'Subjek Web': row['Subjek yang paling sering diakses di website BPS'],
-                  'Rilis BRS': row['Menyaksikan Rilis Berita Resmi Statistik BPS Provinsi Jawa Barat'],
-                  'Indikator BPS': row['Indikator statistik yang rutin dirilis oleh BPS Provinsi Jawa Barat'],
-                  'Ruang Postat': row['Apakah di kampus Anda sudah tersedia Ruang Pojok Statistik'],
-                  'PSV': row['Alamat Pojok Statistik Virtual'],
-                  'Menu PSV': row['Menu yang paling disukai dari Pojok Statistik Virtual'],
-                  'Kebutuhan Data': row['Data yang diperlukan untuk tugas/ penelitian/ skripsi/ tesis/ disertasi'],
-                  'Gender': row['Jenis Kelamin'],
-                  'Timestamp': row['Timestamp'],
-                  'Tanggal Lahir': row['Tanggal Lahir'],
-                  'Asal Kampus': row['Asal Kampus']
-                }));
-
-                const final_df = renamed_df.map(row => ({
-                  ...row,
-                  Responden: row.Responden === 'Setuju' ? 1 : row.Responden,
-                }));
-
-                // 1.  Kalkulasi Metrik
-                const totalResponden = final_df.length;
-                const totalLaki = final_df.filter(row => row['Gender'] === 'Laki-laki').length;
-                const totalPerempuan = final_df.filter(row => row['Gender'] === 'Perempuan').length;
-
-                // Tampilkan Metrik di HTML
-                document.getElementById('total-responden').textContent = totalResponden;
-                document.getElementById('total-laki').textContent = totalLaki;
-                document.getElementById('total-perempuan').textContent = totalPerempuan;
-
-                // 2.  Progres Harian
-                const harian = final_df.reduce((acc, row) => {
-                  const tanggal = new Date(row['Timestamp']).toLocaleDateString();
-                  acc[tanggal] = (acc[tanggal] || 0) + 1;
-                  return acc;
-                }, {});
-
-                const tanggalHarian = Object.keys(harian).sort();
-                const respondenHarian = tanggalHarian.map(tanggal => harian[tanggal]);
-
-                const progresHarianChart = createChart('progres-harian-chart', 'line', {
-                    labels: tanggalHarian,
-                    datasets: [{
-                        label: 'Jumlah Responden',
-                        data: respondenHarian,
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 2,
-                        fill: false
-                    }]
-                }, {
-                    scales: {
-                        x: {
-                            type: 'category',
-                            title: {
-                                display: true,
-                                text: 'Tanggal'
-                            }
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: 'Jumlah Responden'
-                            }
-                        }
-                    }
-                });
-
-                // 3. Pie Chart Kampus
-                const rekapKampus = final_df.reduce((acc, row) => {
-                    const kampus = row['Asal Kampus'];
-                    acc[kampus] = (acc[kampus] || 0) + 1;
-                    return acc;
-                }, {});
-
-                const kampusLabels = Object.keys(rekapKampus);
-                const kampusData = kampusLabels.map(kampus => rekapKampus[kampus]);
-                const kampusColors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2']; // Contoh warna
-
-                const pieKampusChart = createChart('pie-kampus-chart', 'pie', {
-                    labels: kampusLabels,
-                    datasets: [{
-                        data: kampusData,
-                        backgroundColor: kampusColors
-                    }]
-                }, {
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: (context) => {
-                                    let label = context.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    if (context.parsed) {
-                                        label += context.parsed + ' (' + context.formattedValue + '%)';
-                                    }
-                                    return label;
-                                }
-                            }
-                        }
-                    }
-                });
-        // 4. Rekap Kampus
-        document.getElementById('unpad-responden').textContent = rekapKampus['Universitas Padjadjaran'] || 0;
-        document.getElementById('unpar-responden').textContent = rekapKampus['Universitas Katolik Parahyangan'] || 0;
-        document.getElementById('ipb-responden').textContent = rekapKampus['Institut Pertanian Bogor'] || 0;
-        document.getElementById('ui-responden').textContent = rekapKampus['Universitas Indonesia'] || 0;
-        document.getElementById('unisba-responden').textContent = rekapKampus['Universitas Islam Bandung'] || 0;
-        document.getElementById('unsil-responden').textContent = rekapKampus['Universitas Siliwangi'] || 0;
-        document.getElementById('upb-responden').textContent = rekapKampus['Universitas Pelita Bangsa'] || 0;
-
-        // 5. Berdasarkan Agen Pojok Statistik (monev_batang)
-        const rekapAgen = final_df.reduce((acc, row) => {
-            const agen = row['Agen'];
-            if (!acc[agen]) {
-                acc[agen] = 0;
-            }
-            acc[agen]++;
-            return acc;
-        }, {});
-
-        const agenLabels = Object.keys(rekapAgen);
-        const agenData = agenLabels.map(agen => rekapAgen[agen]);
-
-        const monevBatangChart = createChart('monev-batang-chart', 'bar', {
-            labels: agenLabels,
-            datasets: [{
-                label: 'Jumlah Responden',
-                data: agenData,
-                backgroundColor: 'rgba(54, 162, 235, 0.8)'
-            }]
-        }, {
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Jumlah Responden'
-                    }
-                },
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Agen'
-                    }
-                }
-            }
-        });
-
-        // 6. Berdasarkan Pojok Statistik (monev_trimep) - Simplified version as treemap is complex to implement with Chart.js
-        // You'd ideally use a different library for treemaps. Here's a placeholder.
-        const kampusAgenData = final_df.reduce((acc, row) => {
-            const kampus = row['Asal Kampus'];
-            const agen = row['Agen'];
-            if (!acc[kampus]) {
-                acc[kampus] = {};
-            }
-            acc[kampus][agen] = (acc[kampus][agen] || 0) + 1;
-            return acc;
-        }, {});
-
-        // For the sake of this example, just outputting the data to console.
-        console.log("Kampus Agen Data:", kampusAgenData);
-
-        // Add logic to display the treemap-like data as needed.  Without a proper treemap library, this will require more work.
-
-        } catch (error) {
-            console.error("Error loading and processing data:", error);
-            alert("Terjadi kesalahan saat memuat atau memproses data.  Lihat konsol untuk detail.");
-        }
-    }
-
-    // Panggil fungsi main saat halaman dimuat
-    document.addEventListener('DOMContentLoaded', main);
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
