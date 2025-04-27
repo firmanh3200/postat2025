@@ -101,6 +101,7 @@ with st.expander('Progres Berdasarkan Postat'):
         
 ########################################################################################
 rekap_agen = df.groupby(['Asal Kampus', 'Agen'])['Responden'].count().reset_index()
+rekap_agen = rekap_agen.sort_values(by='Responden', ascending=False)
 
 monev_batang = px.bar(rekap_agen, y='Agen', x='Responden', orientation='h')
 
