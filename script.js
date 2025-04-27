@@ -49,7 +49,21 @@ document.addEventListener('DOMContentLoaded', function() {
         dailyProgressData[date] = (dailyProgressData[date] || 0) + 1;
       });
 
-      const dailyProgress = Object.entries(dailyProgressData).map(([date, count]) => ({ x: date, y: count }));
+      // Filter Daily Progress for April 24-26 2025
+      const startDate = new Date('2025-04-23');
+      const endDate = new Date('2025-04-27');
+      const filteredDailyProgressData = Object.entries(dailyProgressData)
+          .filter(([date]) => {
+              const currentDate = new Date(date);
+              return currentDate >= startDate && currentDate <= endDate;
+          })
+          .reduce((obj, [date, count]) => {
+              obj[date] = count;
+              return obj;
+          }, {});
+
+      const dailyProgress = Object.entries(filteredDailyProgressData).map(([date, count]) => ({ x: date, y: count }));
+
 
       // Per Postat
       const perPostatData = {};
@@ -72,10 +86,14 @@ document.addEventListener('DOMContentLoaded', function() {
         rekapAgenData[key] = (rekapAgenData[key] || 0) + 1;
       });
 
-      const rekapAgen = Object.entries(rekapAgenData).map(([key, count]) => {
-        const [kampus, agen] = key.split('-');
-        return { kampus, agen, value: count };
-      });
+      // Sort rekapAgen by value in descending order
+      const rekapAgen = Object.entries(rekapAgenData)
+        .sort(([, valueA], [, valueB]) => valueB - valueA) // Sort in descending order
+        .map(([key, count]) => {
+          const [kampus, agen] = key.split('-');
+          return { kampus, agen, value: count };
+        });
+
 
       return {
         totalResponden,
@@ -131,11 +149,19 @@ document.addEventListener('DOMContentLoaded', function() {
   // ApexCharts rendering functions
   function renderDailyProgressChart(data) {
     const options = {
-      chart: { type: 'bar', height: 300 },
+      chart: { type: 'line', height: 300 }, // Changed to line chart
       series: [{ name: 'Responden', data: data }],
-      xaxis: { type: 'datetime' },
+      xaxis: {
+          type: 'datetime',
+          labels: {
+              format: 'dd MMM yyyy' // Format date labels
+          }
+      },
       yaxis: { title: { text: 'Jumlah Responden' } },
-      colors: [getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim()]
+      colors: [getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim()],
+      stroke: {
+          curve: 'smooth' // Add smooth curve to the line
+      }
     };
     const chart = new ApexCharts(document.querySelector("#progres-harian"), options);
     window.dailyProgressChart = chart;
@@ -155,13 +181,17 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function renderMonevBatangChart(data) {
-    const options = {
-      chart: { type: 'bar', height: 400 },
-      series: [{ name: 'Responden', data: data.map(item => item.value) }],
-      xaxis: { categories: data.map(item => item.agen) },
-      yaxis: { title: { text: 'Jumlah Responden' } },
-      colors: [getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim()]
-    };
+      // Extract agen names and values from the sorted data
+      const agentNames = data.map(item => item.agen);
+      const agentValues = data.map(item => item.value);
+
+      const options = {
+          chart: { type: 'bar', height: 400 },
+          series: [{ name: 'Responden', data: agentValues }],
+          xaxis: { categories: agentNames }, // Use sorted agent names
+          yaxis: { title: { text: 'Jumlah Responden' } },
+          colors: [getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim()]
+      };
 
     const chart = new ApexCharts(document.querySelector("#monev-batang"), options);
     chart.render();
