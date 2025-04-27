@@ -1,0 +1,32 @@
+function renderMonevBatangChart(data) {
+  // Extract agen names and values from the sorted data
+  const agentNames = data.map(item => item.agen);
+  const agentValues = data.map(item => item.value);
+
+  const options = {
+    chart: {
+      type: 'bar',
+      height: 400,
+      animations: {
+        enabled: false // Disable animations
+      }
+    },
+    series: [{ name: 'Responden', data: agentValues }],
+    xaxis: {
+      categories: agentNames, // Use sorted agent names
+      labels: {
+        trim: false, // Prevent label trimming
+        hideOverlappingLabels: false, // Prevent label overlapping
+        rotate: -45, // Rotate labels for better readability
+        style: {
+          fontSize: '12px' // Adjust font size as needed
+        }
+      }
+    },
+    yaxis: { title: { text: 'Jumlah Responden' } },
+    colors: [getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim()]
+  };
+
+  const chart = new ApexCharts(document.querySelector("#monev-batang"), options);
+  chart.render();
+}
