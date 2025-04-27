@@ -12,8 +12,14 @@
 
     <header>
         <h1>Monitoring Survei Mahasiswa Pojok Statistik</h1>
-        <p>Provinsi Jawa Barat</p>
         <div class="warning-message">Tanggal 23 - 26 April 2025</div>
+
+        <!-- Theme Toggle Buttons -->
+        <div class="theme-toggle">
+            <button class="theme-button blue-theme" data-theme="blue"></button>
+            <button class="theme-button green-theme" data-theme="green"></button>
+            <button class="theme-button orange-theme" data-theme="orange"></button>
+        </div>
     </header>
 
     <section class="metrics">
@@ -97,5 +103,25 @@
     </footer>
 
     <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeButtons = document.querySelectorAll('.theme-button');
+
+            themeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const theme = this.dataset.theme;
+                    document.body.className = theme + '-theme'; // Set the body class
+                    updateChartColors(theme)
+                });
+            });
+
+            // Create global chart variables
+            window.dailyProgressChart = null;
+
+            // Initial rendering
+
+        });
+
+</script>
 </body>
 </html>

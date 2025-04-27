@@ -4,6 +4,8 @@ import plotly.express as px
 from datetime import datetime
 from sumber import df
 
+st.set_page_config(layout='wide')
+
 df_dashboard = df.copy()
 del df_dashboard['Agen']
 del df_dashboard['Timestamp']

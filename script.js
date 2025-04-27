@@ -134,9 +134,11 @@ document.addEventListener('DOMContentLoaded', function() {
       chart: { type: 'bar', height: 300 },
       series: [{ name: 'Responden', data: data }],
       xaxis: { type: 'datetime' },
-      yaxis: { title: { text: 'Jumlah Responden' } }
+      yaxis: { title: { text: 'Jumlah Responden' } },
+      colors: [getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim()]
     };
     const chart = new ApexCharts(document.querySelector("#progres-harian"), options);
+    window.dailyProgressChart = chart;
     chart.render();
   }
 
@@ -145,7 +147,8 @@ document.addEventListener('DOMContentLoaded', function() {
       chart: { type: 'pie', height: 300 },
       series: data.map(item => item.value),
       labels: data.map(item => item.label),
-      legend: { position: 'bottom' }
+      legend: { position: 'bottom' },
+      colors: [getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim()]
     };
     const chart = new ApexCharts(document.querySelector("#per-postat"), options);
     chart.render();
@@ -156,7 +159,8 @@ document.addEventListener('DOMContentLoaded', function() {
       chart: { type: 'bar', height: 400 },
       series: [{ name: 'Responden', data: data.map(item => item.value) }],
       xaxis: { categories: data.map(item => item.agen) },
-      yaxis: { title: { text: 'Jumlah Responden' } }
+      yaxis: { title: { text: 'Jumlah Responden' } },
+      colors: [getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim()]
     };
 
     const chart = new ApexCharts(document.querySelector("#monev-batang"), options);
@@ -180,12 +184,49 @@ document.addEventListener('DOMContentLoaded', function() {
       },
       legend: {
         show: false
-      }
+      },
+      colors: [getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim()]
+
     };
 
     const chart = new ApexCharts(document.querySelector("#monev-trimep"), options);
     chart.render();
   }
+
+    function updateChartColors(theme) {
+        let primaryColor;
+        if (theme === 'blue') {
+            primaryColor = '#0d6efd';
+        } else if (theme === 'green') {
+            primaryColor = '#28a745';
+        } else {
+            primaryColor = '#fd7e14';
+        }
+
+        // Update Daily Progress Chart options (example)
+        dailyProgressChart.updateOptions({
+            chart: {
+                foreColor: primaryColor // change the title color
+            },
+            xaxis: {
+              labels: {
+                style: {
+                  colors: primaryColor,
+                }
+              }
+            },
+            yaxis: {
+              labels: {
+                style: {
+                  colors: primaryColor,
+                }
+              }
+            }
+
+        });
+
+        // Update other charts similarly
+    }
 
   // Initial Data Load and Rendering
   renderData();

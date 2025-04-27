@@ -1,15 +1,39 @@
 /* style.css */
+:root {
+    --blue: #007BFF;
+    --green: #28a745;
+    --orange: #fd7e14;
+    --primary-color: var(--blue); /* Default primary color */
+}
+
 body {
     font-family: sans-serif;
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
     color: #333;
+    transition: background-color 0.3s, color 0.3s; /* Smooth transitions */
+}
+
+/* Theme Styles (Default) */
+body.blue-theme {
+    background-color: #e7f5ff;
+    color: #0d6efd;
+}
+
+body.green-theme {
+    background-color: #e8f5e9;
+    color: #28a745;
+}
+
+body.orange-theme {
+    background-color: #fff3e0;
+    color: #fd7e14;
 }
 
 /* Sticky Header */
 header {
-    background-color: #007BFF;
+    background-color: var(--primary-color);
     color: white;
     padding: 1rem;
     text-align: center;
@@ -17,10 +41,15 @@ header {
     top: 0;
     z-index: 100; /* Ensure it stays on top */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: space-between; /* Added for spacing */
+    align-items: center;
+    transition: background-color 0.3s; /* Tambahkan transisi untuk header juga */
 }
 
 header h1 {
     margin-bottom: 0.5rem;
+    flex-grow: 1; /* Allow h1 to take up remaining space */
 }
 
 .success-message {
@@ -39,6 +68,32 @@ header h1 {
     margin-top: 0.5rem;
 }
 
+/* Theme Switcher */
+.theme-toggle {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.theme-button {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+}
+
+.blue-theme {
+    background-color: #0d6efd;
+}
+
+.green-theme {
+    background-color: #28a745;
+}
+
+.orange-theme {
+    background-color: #fd7e14;
+}
+
 /* Metrics Section */
 .metrics {
     display: flex;
@@ -54,6 +109,7 @@ header h1 {
     text-align: center;
     width: 30%;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, border-color 0.3s;  /* Add transitions */
 }
 
 .metric-inner {
@@ -70,10 +126,22 @@ header h1 {
     font-size: 3.5rem;
 }
 
-.green { color: green; }
-.blue { color: blue; }
-.orange { color: orange; }
+/* Theme-Specific Metric Values */
+body.blue-theme .metric-value { color: #0d6efd; }
+body.green-theme .metric-value { color: #28a745; }
+body.orange-theme .metric-value { color: #fd7e14; }
 
+body.blue-theme .green { color: #0d6efd; }
+body.blue-theme .blue { color: #0d6efd; }
+body.blue-theme .orange { color: #0d6efd; }
+
+body.green-theme .green { color: #28a745; }
+body.green-theme .blue { color: #28a745; }
+body.green-theme .orange { color: #28a745; }
+
+body.orange-theme .green { color: #fd7e14; }
+body.orange-theme .blue { color: #fd7e14; }
+body.orange-theme .orange { color: #fd7e14; }
 /* Charts Section */
 .charts {
     display: flex;
@@ -88,6 +156,7 @@ header h1 {
     border-radius: 5px;
     padding: 1rem;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, border-color 0.3s; /* Add transitions */
 }
 
 /* Kampus Data Section */
@@ -109,6 +178,7 @@ header h1 {
     border-radius: 5px;
     padding: 1rem;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, border-color 0.3s; /* Add transitions */
 }
 
 /* Agent Charts Section */
@@ -138,4 +208,18 @@ footer {
         width: 95%;
         margin-bottom: 1rem;
     }
+
+    header {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    header h1 {
+        margin-bottom: 0.25rem;
+    }
+
+    .theme-toggle {
+        margin-top: 0.5rem;
+    }
+
 }
