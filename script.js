@@ -168,30 +168,50 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function renderMonevTrimepChart(data) {
-    const options = {
-      series: [
-        {
-          data: data.map(item => ({
-            x: item.kampus,
-            y: item.value,
-            z: item.value // Use value for the size of the treemap
-          }))
+    // Struktur ulang data untuk hierarki
+    const kampusData = {};
+    data.forEach(item => {
+        if (!kampusData[item.kampus]) {
+            kampusData[item.kampus] = {
+                name: item.kampus,
+                children: []
+            };
         }
-      ],
-      chart: {
-        height: 350,
-        type: 'treemap'
-      },
-      legend: {
-        show: false
-      },
-      colors: [getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim()]
+        kampusData[item.kampus].children.push({
+            name: item.agen,
+            value: item.value
+        });
+    });
 
+    const seriesData = Object.values(kampusData).map(kampus => ({
+        data: [{
+            x: kampus.name,
+            y: 1, // Nilai dummy, treemap akan menggunakan children
+            children: kampus.children
+        }]
+    }));
+
+    const options = {
+        series: seriesData,
+        chart: {
+            height: 350,
+            type: 'treemap'
+        },
+        legend: {
+            show: false
+        },
+        // Tambahkan opsi untuk kendali tampilan
+        plotOptions: {
+            treemap: {
+                distributed: true,
+                enableShades: true
+            }
+        }
     };
 
     const chart = new ApexCharts(document.querySelector("#monev-trimep"), options);
     chart.render();
-  }
+}
 
     function updateChartColors(theme) {
         let primaryColor;
